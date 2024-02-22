@@ -1,9 +1,10 @@
 import { Box, Container, Typography, Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import React from "react";
+import React, { useEffect } from "react";
 
 import Login from "../components/auth/Login";
 import Signup from "../components/auth/Signup";
+import { useNavigate } from "react-router-dom";
 
 export default function Homepage() {
   const [value, setValue] = React.useState("1");
@@ -11,6 +12,16 @@ export default function Homepage() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    const user = JSON.parse(localStorage.getItem('userInfo'));
+
+    if(user){
+        navigate('/chats');
+    }
+  },[navigate]);
 
   return (
       <Container maxWidth="xs" sx={{ p: 0 }}>

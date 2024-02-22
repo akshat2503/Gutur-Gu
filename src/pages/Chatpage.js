@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from 'react'
+import { ChatState } from '../context/ChatProvider'
+import Box from '@mui/system/Box';
+import SideDrawer from '../components/miscellaneous/SideDrawer';
+import MyChats from '../components/MyChats';
+import ChatBox from '../components/ChatBox';
+
 
 export default function Chatpage() {
-    const [chats, setChats] = useState([]);
-    const fetchChats = async () => {
-        const data = await fetch('http://localhost:5000/api/chats', {
-            method: "GET",
-        })
-        const json = await data.json();
-        setChats(json);
-        console.log(json);
-    }
-    useEffect(() => {
-        fetchChats();
-        console.log("Hello");
-    }, []);
+    const { user } = ChatState();
     return (
-        <div>
-            {chats.map((chat) =>
-                <div key={chat._id}>{chat.chatName}</div>
-            )}
+        <div style={{ width: '100%'}}>
+            {user && <SideDrawer />}
+            <Box sx={{display: 'flex', justifyContent: 'space-between', width: '90%',  height: '91.5vh', m: '10px'}}>
+                {user && <MyChats/>}
+                {user && <ChatBox/>}
+            </Box>
         </div>
+        
     )
 }
