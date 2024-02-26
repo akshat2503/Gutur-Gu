@@ -11,11 +11,23 @@ import {
   Modal,
   Backdrop,
   Fade,
+  Drawer,
+  Divider,
+  ListItemText,
+  ListItemIcon,
+  ListItem,
+  List,
+  ListItemButton,
+  TextField,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { ChatState } from "../../context/ChatProvider";
 // import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import ChatLoading from "../ChatLoading";
+import axios from "axios";
+import UserListItem from "../UserAvatar/UserListItem";
 
 export default function SideDrawer() {
   const [search, setSearch] = useState("");
@@ -23,9 +35,10 @@ export default function SideDrawer() {
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState();
   const [modalOpen, setModalOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { user } = ChatState();
+  const { user, setSelectedChat, chats, setChats } = ChatState();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -37,10 +50,87 @@ export default function SideDrawer() {
   };
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => setModalOpen(false);
+
+  const toggleDrawer = (newOpen) => () => {
+    setDrawerOpen(newOpen);
+  };
+
+  const handleSearch = async () => {
+    if (!search) {
+      toast.warn("Please enter something in search", {
+        position: "bottom-left",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const data = await axios.get(`http://localhost:5000/api/user?search=${search}`, config);
+
+      setSearchResult(data);
+      console.log(data.data);
+      setLoading(false);
+    } catch (error) {
+      toast.error("Failed to load the search results", {
+        position: "bottom-left",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setLoading(false);
+    }
+  };
+
+  const accessChat = (userId) => {
+    try {
+      setLoadingChat(true);
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const {data} = axios.post("http://localhost:500/api/chat", {userId}, config);
+
+      setSelectedChat(data);
+      setLoadingChat(false);
+    } catch (error) {
+      toast.error("Error fetching the chat", {
+        position: "bottom-left",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setLoading(false);
+    }
+  }
+
   const logoutHandler = () => {
     localStorage.removeItem('userInfo');
     navigate('/');
-  }
+  };
 
   const style = {
     position: 'absolute',
@@ -56,6 +146,7 @@ export default function SideDrawer() {
 
   return (
     <>
+      <ToastContainer />
       <Box
         sx={{
           display: "flex",
@@ -68,7 +159,7 @@ export default function SideDrawer() {
         }}
       >
         <Tooltip title="Search users to chat" arrow>
-          <Button variant="contained" endIcon={<SearchIcon />}>
+          <Button variant="contained" onClick={toggleDrawer(true)} endIcon={<SearchIcon />}>
             <Typography
               variant="button"
               sx={{ display: { xs: "none", sm: "block" } }}
@@ -128,14 +219,14 @@ export default function SideDrawer() {
           transformOrigin={{ horizontal: 'right', vertical: 'top' }}
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-          <MenuItem onClick={() => { handleClose(); setModalOpen(true); }}>Profile</MenuItem>
+          <MenuItem onClick={() => { handleModalOpen(); handleClose(); }}>Profile</MenuItem>
           {/* <ProfileModal open={modalOpen} setOpen={setModalOpen} /> */}
 
           <Modal
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
-            open={open}
-            onClose={handleClose}
+            open={modalOpen}
+            onClose={handleModalClose}
             closeAfterTransition
             slots={{ backdrop: Backdrop }}
             slotProps={{
@@ -159,6 +250,25 @@ export default function SideDrawer() {
           <MenuItem onClick={logoutHandler}>Logout</MenuItem>
         </Menu>
       </Box>
+
+      <Drawer open={drawerOpen} onClose={toggleDrawer(false)}>
+        <Box sx={{ width: 300 }} role="presentation" onClick={toggleDrawer(false)}>
+          <Typography variant="h4" align="center" p={2}>
+            Search User
+          </Typography>
+          <Divider />
+          <Box display={"flex"} >
+            <TextField id="outlined-basic" label="Search by name or email" variant="outlined" value={search} sx={{ width: '100%', m: '1rem 0' }} onChange={(e) => { setSearch(e.target.value) }} onClick={(e) => e.stopPropagation()} />
+            <Button variant="text" size="small" sx={{ m: '1rem 0' }} onClick={(e) => { e.stopPropagation(); handleSearch(); }}><SearchIcon /></Button>
+          </Box>
+          <Divider />
+          {loading ? <ChatLoading /> : (
+            searchResult.data?.map((user) => (
+              <UserListItem key={user._id} user={user} handleFunction={() => accessChat(user._id)} />
+            ))
+          )}
+        </Box>
+      </Drawer>
     </>
   );
 }
