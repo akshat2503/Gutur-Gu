@@ -13,12 +13,8 @@ import {
   Fade,
   Drawer,
   Divider,
-  ListItemText,
-  ListItemIcon,
-  ListItem,
-  List,
-  ListItemButton,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { ChatState } from "../../context/ChatProvider";
@@ -98,7 +94,7 @@ export default function SideDrawer() {
     }
   };
 
-  const accessChat = (userId) => {
+  const accessChat = async (userId) => {
     try {
       setLoadingChat(true);
       const config = {
@@ -108,8 +104,9 @@ export default function SideDrawer() {
         },
       };
 
-      const {data} = axios.post("http://localhost:500/api/chat", {userId}, config);
+      const {data} = await axios.post("http://localhost:5000/api/chat", {userId}, config);
 
+      if (!chats.find((c)=>c._id === data._id)) setChats([data, ...chats]);
       setSelectedChat(data);
       setLoadingChat(false);
     } catch (error) {
@@ -267,6 +264,8 @@ export default function SideDrawer() {
               <UserListItem key={user._id} user={user} handleFunction={() => accessChat(user._id)} />
             ))
           )}
+          {/* This loading when opening chat doesn't works for now */}
+          {/* {loadingChat && <CircularProgress />} */}
         </Box>
       </Drawer>
     </>

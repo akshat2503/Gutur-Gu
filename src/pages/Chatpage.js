@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { ChatState } from '../context/ChatProvider'
 import Box from '@mui/system/Box';
 import SideDrawer from '../components/miscellaneous/SideDrawer';
@@ -11,11 +11,10 @@ export default function Chatpage() {
     return (
         <div style={{ width: '100%'}}>
             {user && <SideDrawer />}
-            <Box sx={{display: 'flex', justifyContent: 'space-between', width: '90%',  height: '91.5vh', m: '10px'}}>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', width: '98.5%',  height: '91.5vh', m: '10px'}}>
                 {user && <MyChats/>}
                 {user && <ChatBox/>}
             </Box>
         </div>
-        
     )
 }
