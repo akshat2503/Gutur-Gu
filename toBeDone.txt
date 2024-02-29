@@ -4,15 +4,10 @@ Toast on Successful Login and Registration.
 Profile Modal.
 
 
-<List>
-        {['Search User', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+
+
+
+Search API is returning passwords from user.
+
+Removal of Admin User not allowed.
+Duplicate user on Create New Group Chat

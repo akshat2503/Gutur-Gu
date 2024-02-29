@@ -21,7 +21,7 @@ const style = {
     p: 4,
 };
 
-export default function MyChats() {
+export default function MyChats({ fetchAgain }) {
     const [loggedUser, setLoggedUser] = useState();
     const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
 
@@ -169,7 +169,7 @@ export default function MyChats() {
     useEffect(() => {
         setLoggedUser(JSON.parse(localStorage.getItem('userInfo')));
         fetchChat();
-    }, []);
+    }, [fetchAgain]);
 
     return (
         <Box sx={{ display: { base: selectedChat ? "none" : "flex", md: 'flex' }, flexDirection: 'column', alignItems: 'center', bgcolor: 'white', width: { base: "100%", md: "31%" }, borderWidth: '1px', borderRadius: '16px' }} p={3}>

@@ -13,7 +13,7 @@ export default function UserBadgeItem({ user, handleFunction }) {
       color: 'white', 
       display: 'flex',
       alignItems: 'center',
-    }} px={1.5} py={1} m={0.5} my={1} onClick={()=>handleFunction()} >
+    }} px={1.5} py={1} m={0.5} my={0.5} onClick={()=>handleFunction()} >
       {user.name}
       <CloseIcon />
     </Box>

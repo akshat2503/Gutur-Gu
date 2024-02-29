@@ -16,7 +16,7 @@ export default function UserListItem({ user, handleFunction }) {
                 bgcolor: '#38B2AC',
                 color: 'white',
             }
-        }} py={2} mt={2}>
+        }} py={2} mt={1}>
             <Avatar src={user.pic} sx={{ mx: '0.75rem' }}>{user.name[0]}</Avatar>
             <Box>
                 <Typography>{user.name}</Typography>
