@@ -3,11 +3,4 @@ Toast on Successful Login and Registration.
 
 Profile Modal.
 
-
-
-
-
-Search API is returning passwords from user.
-
 Removal of Admin User not allowed.
-Duplicate user on Create New Group Chat

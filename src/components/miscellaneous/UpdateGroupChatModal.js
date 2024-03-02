@@ -123,7 +123,8 @@ export default function UpdateGroupChatModal({ fetchAgain, setFetchAgain }) {
             }
 
             const { data } = await axios.get(`http://localhost:5000/api/user?search=${search}`, config)
-            setSearchResult(data);
+            const updatedSearchResult = data.filter(newResult => !selectedChat.users.some(existingResult => existingResult._id === newResult._id));           
+            setSearchResult(updatedSearchResult);
             setLoading(false);
         } catch (error) {
             toast.error("Unable to search", {
@@ -141,7 +142,6 @@ export default function UpdateGroupChatModal({ fetchAgain, setFetchAgain }) {
     };
 
     const handleAddUser = async (userToAdd) => {
-        // if (!selectedChat.users.find((u)=> u._id === userToAdd._id )){}
 
         try {
             setLoading(true);

@@ -163,7 +163,6 @@ export default function SideDrawer() {
                         >
                             Search User
                         </Typography>
-                        {/* Search User */}
                     </Button>
                 </Tooltip>
 

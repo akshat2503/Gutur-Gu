@@ -25,7 +25,7 @@ export default function MyChats({ fetchAgain }) {
     const [loggedUser, setLoggedUser] = useState();
     const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [groupChatName, setGroupChatName] = useState();
@@ -43,7 +43,6 @@ export default function MyChats({ fetchAgain }) {
                 },
             }
             const { data } = await axios.get("http://localhost:5000/api/chat", config);
-            console.log(data);
             setChats(data);
         } catch (error) {
             toast.warn("Failed to load chats", {
@@ -74,9 +73,10 @@ export default function MyChats({ fetchAgain }) {
             }
 
             const { data } = await axios.get(`http://localhost:5000/api/user?search=${search}`, config);
-            console.log(data);
+            const updatedSearchResult = data.filter(newResult => !selectedUsers.some(existingResult => existingResult._id === newResult._id));
+            console.log(updatedSearchResult);
+            setSearchResult(updatedSearchResult);
             setLoading(false);
-            setSearchResult(data);
 
         } catch (error) {
             toast.warn("Failed to search results", {
@@ -160,7 +160,9 @@ export default function MyChats({ fetchAgain }) {
             return;
         }
         setSelectedUsers([...selectedUsers, userToAdd]);
-    }
+        const updatedSearchResult = searchResult.filter(newResult => newResult._id !== userToAdd._id);
+        setSearchResult(updatedSearchResult);
+    };
 
     const handleDelete = (delUser) => {
         setSelectedUsers(selectedUsers.filter((sel) => sel._id !== delUser._id));
@@ -186,9 +188,6 @@ export default function MyChats({ fetchAgain }) {
                         <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontSize: '35px', fontFamily: 'Work sans', textAlign: 'center' }}>
                             Create Group Chat
                         </Typography>
-                        {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography> */}
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <TextField id="outlined-basic" label="Chat Name" variant="outlined" sx={{ width: '100%', my: '6px' }} onChange={(e) => { setGroupChatName(e.target.value) }} />
                             <TextField id="outlined-basic" label="Add Users" variant="outlined" sx={{ width: '100%', my: '6px' }} onChange={(e) => { handleSearch(e.target.value) }} />
