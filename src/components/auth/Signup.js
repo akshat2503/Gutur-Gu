@@ -11,6 +11,8 @@ import { useNavigate } from 'react-router-dom';
 
 
 export default function Signup() {
+    const apiUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000'
+
     const [name, setName] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
@@ -99,7 +101,7 @@ export default function Signup() {
                     "Content-type": "application/json",
                 },
             }
-            const { data } = await axios.post("http://localhost:5000/api/user", {name, email, password, pic}, config);
+            const { data } = await axios.post(`${apiUrl}/api/user`, {name, email, password, pic}, config);
             localStorage.setItem("userInfo", JSON.stringify(data));
             setLoading(false);
             navigate('/chats');

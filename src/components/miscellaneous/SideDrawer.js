@@ -26,6 +26,8 @@ import axios from "axios";
 import UserListItem from "../UserAvatar/UserListItem";
 
 export default function SideDrawer() {
+    const apiUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
+
     const [search, setSearch] = useState("");
     const [searchResult, setSearchResult] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -74,7 +76,7 @@ export default function SideDrawer() {
                 },
             };
 
-            const data = await axios.get(`http://localhost:5000/api/user?search=${search}`, config);
+            const data = await axios.get(`${apiUrl}/api/user?search=${search}`, config);
 
             setSearchResult(data);
             console.log(data.data);
@@ -104,7 +106,7 @@ export default function SideDrawer() {
                 },
             };
 
-            const { data } = await axios.post("http://localhost:5000/api/chat", { userId }, config);
+            const { data } = await axios.post(`${apiUrl}/api/chat`, { userId }, config);
 
             if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
             setSelectedChat(data);

@@ -32,6 +32,7 @@ const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 
 export default function SingleChat({ fetchAgain, setFetchAgain }) {
+    const apiUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
     const [loading, setLoading] = useState(false);
     const [messages, setMessages] = useState([]);
@@ -90,7 +91,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                 },
             }
 
-            const { data } = await axios.get(`http://localhost:5000/api/message/${selectedChat._id}`, config);
+            const { data } = await axios.get(`${apiUrl}/api/message/${selectedChat._id}`, config);
             console.log(data);
             setMessages(data);
             setLoading(false);
@@ -121,7 +122,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                 }
 
                 setNewMessage("");
-                const { data } = await axios.post('http://localhost:5000/api/message', {
+                const { data } = await axios.post(`${apiUrl}/api/message`, {
                     content: newMessage,
                     chatId: selectedChat._id,
                 }, config);

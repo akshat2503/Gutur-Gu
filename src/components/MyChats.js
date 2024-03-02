@@ -22,6 +22,8 @@ const style = {
 };
 
 export default function MyChats({ fetchAgain }) {
+    const apiUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
+
     const [loggedUser, setLoggedUser] = useState();
     const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
 
@@ -42,7 +44,7 @@ export default function MyChats({ fetchAgain }) {
                     Authorization: `Bearer ${user.token}`,
                 },
             }
-            const { data } = await axios.get("http://localhost:5000/api/chat", config);
+            const { data } = await axios.get(`${apiUrl}/api/chat`, config);
             setChats(data);
         } catch (error) {
             toast.warn("Failed to load chats", {
@@ -72,7 +74,7 @@ export default function MyChats({ fetchAgain }) {
                 },
             }
 
-            const { data } = await axios.get(`http://localhost:5000/api/user?search=${search}`, config);
+            const { data } = await axios.get(`${apiUrl}/api/user?search=${search}`, config);
             const updatedSearchResult = data.filter(newResult => !selectedUsers.some(existingResult => existingResult._id === newResult._id));
             console.log(updatedSearchResult);
             setSearchResult(updatedSearchResult);
@@ -114,7 +116,7 @@ export default function MyChats({ fetchAgain }) {
                 },
             }
 
-            const { data } = await axios.post("http://localhost:5000/api/chat/group", {
+            const { data } = await axios.post(`${apiUrl}/api/chat/group`, {
                 name: groupChatName,
                 users: JSON.stringify(selectedUsers.map((u) => u._id)),
             }, config);

@@ -23,6 +23,8 @@ const style = {
 };
 
 export default function UpdateGroupChatModal({ fetchAgain, setFetchAgain }) {
+    const apiUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000'
+
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -40,7 +42,7 @@ export default function UpdateGroupChatModal({ fetchAgain, setFetchAgain }) {
     }, [])
 
     const handleRemove = async (userToRemove) => {
-        if (selectedChat.groupAdmin._id !== user._id && userToRemove._id !== user._id){
+        if (selectedChat.groupAdmin._id !== user._id && userToRemove._id !== user._id) {
             console.log("Only admins can remove someone from group");
         }
 
@@ -52,7 +54,7 @@ export default function UpdateGroupChatModal({ fetchAgain, setFetchAgain }) {
                 },
             }
 
-            const { data } = await axios.put("http://localhost:5000/api/chat/groupremove", {
+            const { data } = await axios.put(`${apiUrl}/api/chat/groupremove`, {
                 chatId: selectedChat._id,
                 userId: userToRemove._id
             }, config);
@@ -74,7 +76,7 @@ export default function UpdateGroupChatModal({ fetchAgain, setFetchAgain }) {
             setLoading(false);
         }
     };
-    
+
     const handleRename = async () => {
         if (!groupChatName || groupChatName === selectedChat.chatName) return
         try {
@@ -85,7 +87,7 @@ export default function UpdateGroupChatModal({ fetchAgain, setFetchAgain }) {
                 },
             }
 
-            const { data } = await axios.put("http://localhost:5000/api/chat/rename", {
+            const { data } = await axios.put(`${apiUrl}/api/chat/rename`, {
                 chatId: selectedChat._id,
                 chatName: groupChatName
             }, config);
@@ -122,8 +124,8 @@ export default function UpdateGroupChatModal({ fetchAgain, setFetchAgain }) {
                 },
             }
 
-            const { data } = await axios.get(`http://localhost:5000/api/user?search=${search}`, config)
-            const updatedSearchResult = data.filter(newResult => !selectedChat.users.some(existingResult => existingResult._id === newResult._id));           
+            const { data } = await axios.get(`${apiUrl}/api/user?search=${search}`, config)
+            const updatedSearchResult = data.filter(newResult => !selectedChat.users.some(existingResult => existingResult._id === newResult._id));
             setSearchResult(updatedSearchResult);
             setLoading(false);
         } catch (error) {
@@ -151,7 +153,7 @@ export default function UpdateGroupChatModal({ fetchAgain, setFetchAgain }) {
                 },
             }
 
-            const { data } = await axios.put("http://localhost:5000/api/chat/groupadd", {
+            const { data } = await axios.put(`${apiUrl}/api/chat/groupadd`, {
                 chatId: selectedChat._id,
                 userId: userToAdd._id,
             }, config);
