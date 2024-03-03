@@ -17,7 +17,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: {xs: 300, md: 400},
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -173,12 +173,14 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                     Authorization: `Bearer ${user.token}`,
                 },
             }
-
+            console.log("Deleting chats for ")
             const { data } = await axios.put(`${apiUrl}/api/chat/deletechat`, {
                 chatId: selectedChat._id,
             }, config);
 
+            console.log("-------------------------------------");
             console.log(data);
+            console.log("-------------------------------------");
             setFetchAgain(!fetchAgain);
             setLoading(false);
             setSelectedChat("");
@@ -206,9 +208,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                         fontFamily: 'Work sans',
                         display: 'flex',
                         alignItems: 'center'
-                    }} fontSize={{ base: '28px', md: '30px' }} pb={3} px={2} justifyContent={'space-between'} >
-                        <ArrowBackIcon sx={{ display: { base: 'flex', md: 'none' }, cursor: 'pointer' }} onClick={() => { setSelectedChat("") }} />
-                        {/* </Typography> */}
+                    }} fontSize={{ xs: '18px', md: '30px' }} pb={3} px={2} justifyContent={'space-between'} >
+                        <ArrowBackIcon sx={{ display: { xs: 'flex', md: 'none' }, cursor: 'pointer' }} onClick={() => { setSelectedChat(""); setFetchAgain(!fetchAgain); }} />
                         {!selectedChat.isGroupChat ? (
                             <>
                                 {getSender(user, selectedChat.users)}
@@ -245,11 +246,11 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'flex-end',
-                        backgroundColor: '#E8E8E8',
+                        background: 'linear-gradient(90deg, rgba(190,227,248,1) 0%, rgba(185,245,208,1) 100%)',
                         width: '100%',
                         height: '100%',
                         borderRadius: '16px',
-                        overflowY: 'hidden'
+                        overflowY: 'hidden',
                     }} >
                         {loading ? (
                             <CircularProgress size={50} sx={{ alignSelf: 'center', justifySelf: 'center', m: 'auto' }} />
@@ -259,7 +260,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                             </Box>
                         )}
                         <Box sx={{ m: 2 }}>
-                            {/* {isTyping?<div>Loading ...</div>:<></>} */}
                             {isTyping && !typing ? <div><Lottie options={defaultOptions} width={70} height={50} style={{ margin: 0 }} /></div> : <></>}
                             <TextField id="outlined-basic" value={newMessage} placeholder='Enter a message ...' variant="outlined" sx={{ width: '100%' }} onChange={typingHandler} onKeyDown={sendMessage} required />
                         </Box>

@@ -14,11 +14,11 @@ export default function ScrollableChat({ messages }) {
                         (isSameSender(messages, m, i, user._id) || isLastMessage(messages, i, user._id)) &&
                         (
                             <Tooltip title={m.sender.name} placement="bottom-start" arrow>
-                                <Avatar sx={{ marginRight: 1, cursor: 'pointer', alignSelf: 'flex-end' }} src={m.sender.pic}>{m.sender.name[0]}</Avatar>
+                                <Avatar sx={{ marginTop: '0.1rem' ,marginBottom: isSameSender(messages, m, i)? "1rem":"0.3rem", marginRight: 1, cursor: 'pointer', alignSelf: 'flex-end' }} src={m.sender.pic}>{m.sender.name[0]}</Avatar>
                             </Tooltip>
                         )
                     }
-                    <span style={{ marginTop: '0.3rem', borderRadius: '10px', padding: "8px 15px", maxWidth: '75%', backgroundColor: m.sender._id === user._id ? '#BEE3F8' : '#B9F5D0', marginLeft: isSameSenderMargin(messages, m, i, user._id) }}>
+                    <span style={{ boxShadow: "0px 0px 5px 0px rgba(0,0,0,0.2)", marginTop: '0.1rem', marginBottom: isSameSender(messages, m, i)? "1rem":"0.3rem", borderRadius: '10px', padding: "8px 15px", maxWidth: '75%', backgroundColor: m.sender._id === user._id ? '#BEE3F8' : '#B9F5D0', marginLeft: isSameSenderMargin(messages, m, i, user._id) }}>
                         {m.content}
                     </span>
                 </div>

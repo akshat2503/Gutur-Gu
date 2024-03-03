@@ -152,13 +152,13 @@ export default function SideDrawer() {
                     justifyContent: "space-between",
                     alignItems: "center",
                     backgroundColor: "white",
-                    width: "100%",
-                    // p: '5px 10px',
+                    width: "auto",
+                    p: '0.5rem 1rem',
                     borderWidth: "5px",
                 }}
             >
                 <Tooltip title="Search users to chat" arrow>
-                    <Button variant="contained" onClick={toggleDrawer(true)} endIcon={<SearchIcon />}>
+                    <Button variant="outlined" sx={{ display: { xs: "flex", md: "" }, justifyContent: "flex-start" }} onClick={toggleDrawer(true)} endIcon={<SearchIcon />}>
                         <Typography
                             variant="button"
                             sx={{ display: { xs: "none", sm: "block" } }}

@@ -5,13 +5,14 @@ Profile Modal.
 
 Removal of Admin User not allowed.
 
-Responsiveness
-
 Notifications of messages
     Somehow make it to give Chrome notifications.
 
-Delete Chat functionality
-
 Unread Status against the chat.
 
-Not found issue on ./chats.
+Pic uploading
+
+Fix eye on group chat
+
+Not found issue on /chats.
+    Fixed using ChatGPT, Will see when pushed to render

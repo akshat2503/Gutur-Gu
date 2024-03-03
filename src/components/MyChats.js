@@ -2,19 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { ChatState } from '../context/ChatProvider';
 import { ToastContainer, toast } from "react-toastify";
 import axios from 'axios';
-import { Box, Button, CircularProgress, Modal, Stack, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, CircularProgress, Modal, Stack, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ChatLoading from '../components/ChatLoading';
-import { getSender } from '../config/ChatLogics';
+import { getSender, getSenderFull } from '../config/ChatLogics';
 import UserListItem from './UserAvatar/UserListItem';
 import UserBadgeItem from './UserAvatar/UserBadgeItem';
+import GroupIcon from '@mui/icons-material/Group';
+
 
 const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: {xs: 300, md: 400},
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -176,10 +178,11 @@ export default function MyChats({ fetchAgain }) {
     }, [fetchAgain]);
 
     return (
-        <Box sx={{ display: { base: selectedChat ? "none" : "flex", md: 'flex' }, flexDirection: 'column', alignItems: 'center', bgcolor: 'white', width: { base: "100%", md: "31%" }, borderWidth: '1px', borderRadius: '16px' }} p={3}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', fontSize: { base: "28px", md: "30px" }, fontFamily: 'Work sans' }} pb={3} px={3}>
+        
+        <Box sx={{ display: { xs: selectedChat ? "none" : "flex", md: 'flex' }, flexDirection: 'column', alignItems: 'center', bgcolor: 'white', width: { xs: "100%", md: "31%" }, borderWidth: '1px', borderRadius: '16px' }} p={3}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', fontSize: { xs: "24px", md: "30px" }, fontFamily: 'Work sans' }} pb={3} px={3}>
                 My Chats
-                <Button variant='outlined' size='small' sx={{ display: 'flex', fontSize: { base: '17px', md: '10px', lg: '17px' } }} onClick={handleOpen}>New Group Chat<AddIcon /></Button>
+                <Button variant='outlined' size='small' sx={{ display: 'flex', fontSize: { xs: '13px', md: '10px', lg: '17px' } }} onClick={handleOpen}>New Group Chat<AddIcon /></Button>
                 <Modal
                     open={open}
                     onClose={handleClose}
@@ -212,16 +215,22 @@ export default function MyChats({ fetchAgain }) {
                 {chats ? (
                     <Stack sx={{ overflowY: 'scroll' }}>
                         {chats.map((chat) => (
-                            <Box key={chat._id} sx={{ cursor: 'pointer', borderRadius: '16px' }} bgcolor={selectedChat === chat ? "#38B2AC" : "#E8E8E8"} color={selectedChat === chat ? "white" : "black"} px={3} py={2} my={0.5} onClick={() => { setSelectedChat(chat) }} >
-                                <Typography sx={{fontWeight: 'bolder'}}>
-                                    {!chat.isGroupChat ? (getSender(loggedUser, chat.users)) : (chat.chatName)}
-                                    {console.log(chat)}
-                                </Typography>
-                                {chat.latestMessage && (
-                                    <Typography variant='subtitle2' sx={{opacity: '0.7'}}>
-                                        ~ {chat.isGroupChat ? (chat.latestMessage.sender.name + ": " + chat.latestMessage.content) : (chat.latestMessage.content)}
+                            <Box key={chat._id} sx={{ cursor: 'pointer', borderRadius: '16px', display: 'flex' }} bgcolor={selectedChat === chat ? "#38B2AC" : "#E8E8E8"} color={selectedChat === chat ? "white" : "black"} px={3} py={2} my={0.5} onClick={() => { setSelectedChat(chat) }} >
+                                <Avatar
+                                    src={!chat.isGroupChat ? (getSenderFull(loggedUser, chat.users).pic) : ("")}
+                                    sx={{marginRight: 2, alignSelf: 'center'}}
+                                >{!chat.isGroupChat ? (getSender(loggedUser, chat.users)[0]) : (<GroupIcon />)}</Avatar>
+                                <Box>
+
+                                    <Typography sx={{ fontWeight: 'bolder' }}>
+                                        {!chat.isGroupChat ? (getSender(loggedUser, chat.users)) : (chat.chatName)}
                                     </Typography>
-                                )}
+                                    {chat.latestMessage && (
+                                        <Typography variant='subtitle2' sx={{ opacity: '0.7' }}>
+                                            ~ {chat.isGroupChat ? (chat.latestMessage.sender.name + ": " + chat.latestMessage.content) : (chat.latestMessage.content)}
+                                        </Typography>
+                                    )}
+                                </Box>
                             </Box>
                         ))}
                     </Stack>
