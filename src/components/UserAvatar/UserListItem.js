@@ -1,4 +1,4 @@
-import { Avatar, Box, Typography } from '@mui/material'
+import { Avatar, Box, Button, Typography } from '@mui/material'
 import React from 'react'
 
 export default function UserListItem({ user, handleFunction }) {

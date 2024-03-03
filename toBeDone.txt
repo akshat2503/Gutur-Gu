@@ -4,3 +4,14 @@ Toast on Successful Login and Registration.
 Profile Modal.
 
 Removal of Admin User not allowed.
+
+Responsiveness
+
+Notifications of messages
+    Somehow make it to give Chrome notifications.
+
+Delete Chat functionality
+
+Unread Status against the chat.
+
+Not found issue on ./chats.

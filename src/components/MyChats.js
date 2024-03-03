@@ -213,9 +213,15 @@ export default function MyChats({ fetchAgain }) {
                     <Stack sx={{ overflowY: 'scroll' }}>
                         {chats.map((chat) => (
                             <Box key={chat._id} sx={{ cursor: 'pointer', borderRadius: '16px' }} bgcolor={selectedChat === chat ? "#38B2AC" : "#E8E8E8"} color={selectedChat === chat ? "white" : "black"} px={3} py={2} my={0.5} onClick={() => { setSelectedChat(chat) }} >
-                                <Typography>
+                                <Typography sx={{fontWeight: 'bolder'}}>
                                     {!chat.isGroupChat ? (getSender(loggedUser, chat.users)) : (chat.chatName)}
+                                    {console.log(chat)}
                                 </Typography>
+                                {chat.latestMessage && (
+                                    <Typography variant='subtitle2' sx={{opacity: '0.7'}}>
+                                        ~ {chat.isGroupChat ? (chat.latestMessage.sender.name + ": " + chat.latestMessage.content) : (chat.latestMessage.content)}
+                                    </Typography>
+                                )}
                             </Box>
                         ))}
                     </Stack>

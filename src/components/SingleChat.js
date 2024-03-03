@@ -1,4 +1,4 @@
-import { Avatar, Box, CircularProgress, Modal, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, CircularProgress, Modal, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from "react-toastify";
 import { ChatState } from '../context/ChatProvider';
@@ -70,7 +70,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     useEffect(() => {
         socket.on("message recieved", (newMessageRecieved) => {
             if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
-                if (!notification.includes(newMessageRecieved)){
+                if (!notification.includes(newMessageRecieved)) {
                     setNotification([newMessageRecieved, ...notification]);
                     setFetchAgain(!fetchAgain);
                 }
@@ -154,19 +154,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
             socket.emit("typing", selectedChat._id);
         }
 
-        // let lastTypingTime = new Date().getTime()
-        // var timerLength = 3000;
-
         console.log("Reached till timeout function, Wait ...");
-        // setTimeout(() => {
-        //     var timeNow = new Date().getTime();
-        //     var timeDifference = timeNow - lastTypingTime;
-        //     if (timeDifference >= timerLength && typing){
-        //         console.log("Emitting Stop Typing");
-        //         socket.emit("stop typing", selectedChat._id);
-        //         setTyping(false);
-        //     }
-        // }, timerLength);
 
         if (typingTimeout) clearTimeout(typingTimeout);
 
@@ -174,6 +162,39 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
             socket.emit("stop typing", selectedChat._id);
             setTyping(false);
         }, 3000));
+    };
+
+    const handleDeleteChat = async () => {
+        handleClose();
+        setLoading(true);
+        try {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                },
+            }
+
+            const { data } = await axios.put(`${apiUrl}/api/chat/deletechat`, {
+                chatId: selectedChat._id,
+            }, config);
+
+            console.log(data);
+            setFetchAgain(!fetchAgain);
+            setLoading(false);
+            setSelectedChat("");
+        } catch (error) {
+            toast.error("Unable to delete chat !", {
+                position: "bottom-left",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+            setLoading(false);
+        }
     };
 
     return (
@@ -209,6 +230,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                             Email: {getSenderFull(user, selectedChat.users).email}
                                         </Typography>
+                                        <Button variant="contained" color="error" sx={{ mt: 3 }} onClick={handleDeleteChat}>Delete Chat</Button>
                                     </Box>
                                 </Modal>
                             </>
@@ -238,7 +260,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                         )}
                         <Box sx={{ m: 2 }}>
                             {/* {isTyping?<div>Loading ...</div>:<></>} */}
-                            {isTyping && !typing ? <div><Lottie options={defaultOptions} width={70} height={50} style={{margin: 0}} /></div> : <></>}
+                            {isTyping && !typing ? <div><Lottie options={defaultOptions} width={70} height={50} style={{ margin: 0 }} /></div> : <></>}
                             <TextField id="outlined-basic" value={newMessage} placeholder='Enter a message ...' variant="outlined" sx={{ width: '100%' }} onChange={typingHandler} onKeyDown={sendMessage} required />
                         </Box>
                     </Box>
