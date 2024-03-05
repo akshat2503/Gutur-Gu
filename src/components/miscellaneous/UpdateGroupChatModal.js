@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Box, Button, CircularProgress, Modal, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, CircularProgress, Modal, TextField, Typography } from '@mui/material';
 import { ChatState } from '../../context/ChatProvider';
 import { ToastContainer, toast } from "react-toastify";
 import UserListItem from '../UserAvatar/UserListItem';
@@ -13,7 +13,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: {xs: 300, md: 400},
+    width: { xs: 300, md: 400 },
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,

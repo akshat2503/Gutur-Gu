@@ -161,7 +161,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         setTypingTimeout(setTimeout(() => {
             socket.emit("stop typing", selectedChat._id);
             setTyping(false);
-        }, 3000));
+        }, 2000));
     };
 
     const handleDeleteChat = async () => {

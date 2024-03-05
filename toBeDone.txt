@@ -10,9 +10,9 @@ Notifications of messages
 
 Unread Status against the chat.
 
-Pic uploading
-
 Fix eye on group chat
 
 Not found issue on /chats.
     Fixed using ChatGPT, Will see when pushed to render
+
+Group PFP, Editing PFP of user.

@@ -1,4 +1,4 @@
-import { Stack, FormControl, TextField } from '@mui/material';
+import { Stack, FormControl, TextField, InputLabel } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import React from 'react'
 import { useState } from 'react';
@@ -125,8 +125,9 @@ export default function Signup() {
             <TextField onChange={(e) => { setName(e.target.value) }} id="outlined-basic" label="Name" variant="outlined" required />
             <TextField onChange={(e) => { setEmail(e.target.value) }} id="outlined-basic" label="Email" variant="outlined" required />
             <TextField onChange={(e) => { setPassword(e.target.value) }} id="outlined-basic" type="password" label="Password" variant="outlined" required />
-            <TextField onChange={(e) => { setCpassword(e.target.value) }} id="outlined-basic" type="password" label="Current Password" variant="outlined" required />
-            <TextField onChange={(e) => { postDetails(e.target.files[0]) }} id="outlined-basic" type="file" label="" variant="outlined" inputProps={{ accept: 'image/*' }} />
+            <TextField onChange={(e) => { setCpassword(e.target.value) }} id="outlined-basic" type="password" label="Confirm Password" variant="outlined" required />
+            <InputLabel htmlFor="profile-picture-upload">Upload Profile Picture</InputLabel>
+            <TextField onChange={(e) => { postDetails(e.target.files[0]) }} id="profile-picture-upload" type="file" variant="outlined" inputProps={{ accept: 'image/*' }} />
             <LoadingButton loading={loading} onClick={submitHandler} variant="contained">Sign-Up</LoadingButton>
             {/* </FormControl> */}
             <ToastContainer />
