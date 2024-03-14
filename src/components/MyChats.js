@@ -16,7 +16,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: {xs: 300, md: 400},
+    width: { xs: 300, md: 400 },
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -49,7 +49,7 @@ export default function MyChats({ fetchAgain }) {
             const { data } = await axios.get(`${apiUrl}/api/chat`, config);
             setChats(data);
         } catch (error) {
-            toast.warn("Failed to load chats", {
+            toast.warn("Expired Token, Logging Out", {
                 position: "bottom-left",
                 autoClose: 3000,
                 hideProgressBar: true,
@@ -59,6 +59,9 @@ export default function MyChats({ fetchAgain }) {
                 progress: undefined,
                 theme: "light",
             });
+            setTimeout(() => {
+                localStorage.removeItem('userInfo');
+            }, 2000);
         }
     };
 
@@ -178,7 +181,7 @@ export default function MyChats({ fetchAgain }) {
     }, [fetchAgain]);
 
     return (
-        
+
         <Box sx={{ display: { xs: selectedChat ? "none" : "flex", md: 'flex' }, flexDirection: 'column', alignItems: 'center', bgcolor: 'white', width: { xs: "100%", md: "31%" }, borderWidth: '1px', borderRadius: '16px' }} p={3}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', fontSize: { xs: "24px", md: "30px" }, fontFamily: 'Work sans' }} pb={3} px={3}>
                 My Chats
@@ -218,7 +221,7 @@ export default function MyChats({ fetchAgain }) {
                             <Box key={chat._id} sx={{ cursor: 'pointer', borderRadius: '16px', display: 'flex' }} bgcolor={selectedChat === chat ? "#38B2AC" : "#E8E8E8"} color={selectedChat === chat ? "white" : "black"} px={3} py={2} my={0.5} onClick={() => { setSelectedChat(chat) }} >
                                 <Avatar
                                     src={!chat.isGroupChat ? (getSenderFull(loggedUser, chat.users).pic) : ("")}
-                                    sx={{marginRight: 2, alignSelf: 'center'}}
+                                    sx={{ marginRight: 2, alignSelf: 'center' }}
                                 >{!chat.isGroupChat ? (getSender(loggedUser, chat.users)[0]) : (<GroupIcon />)}</Avatar>
                                 <Box>
 
