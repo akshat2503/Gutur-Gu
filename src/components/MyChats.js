@@ -37,6 +37,7 @@ export default function MyChats({ fetchAgain }) {
     const [search, setSearch] = useState();
     const [searchResult, setSearchResult] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [searchTimeout, setSearchTimeout] = useState(null);
 
 
     const fetchChat = async () => {
@@ -70,33 +71,39 @@ export default function MyChats({ fetchAgain }) {
         if (!query) {
             return;
         }
+        setLoading(true);
 
-        try {
-            setLoading(true);
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${user.token}`,
-                },
-            }
-
-            const { data } = await axios.get(`${apiUrl}/api/user?search=${search}`, config);
-            const updatedSearchResult = data.filter(newResult => !selectedUsers.some(existingResult => existingResult._id === newResult._id));
-            console.log(updatedSearchResult);
-            setSearchResult(updatedSearchResult);
-            setLoading(false);
-
-        } catch (error) {
-            toast.warn("Failed to search results", {
-                position: "bottom-left",
-                autoClose: 3000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
         }
+
+        setSearchTimeout(setTimeout(async () => {
+            try {
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                }
+
+                const { data } = await axios.get(`${apiUrl}/api/user?search=${search}`, config);
+                const updatedSearchResult = data.filter(newResult => !selectedUsers.some(existingResult => existingResult._id === newResult._id));
+                console.log(updatedSearchResult);
+                setSearchResult(updatedSearchResult);
+                setLoading(false);
+
+            } catch (error) {
+                toast.warn("Failed to search results", {
+                    position: "bottom-left",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            }
+        }, 1500))
     };
 
     const handleSubmit = async () => {

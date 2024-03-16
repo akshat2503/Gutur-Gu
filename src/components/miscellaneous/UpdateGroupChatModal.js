@@ -36,6 +36,7 @@ export default function UpdateGroupChatModal({ fetchAgain, setFetchAgain }) {
     const [searchResult, setSearchResult] = useState([]);
     const [loading, setLoading] = useState(false);
     const [renameLoading, setRenameLoading] = useState(false);
+    const [searchTimeout, setSearchTimeout] = useState(null);
 
     useEffect(() => {
         setGroupChatName(selectedChat.chatName);
@@ -115,32 +116,38 @@ export default function UpdateGroupChatModal({ fetchAgain, setFetchAgain }) {
     const handleSearch = async (query) => {
         setSearch(query);
         if (!query) return
+        setLoading(true);
 
-        try {
-            setLoading(true);
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${user.token}`,
-                },
-            }
-
-            const { data } = await axios.get(`${apiUrl}/api/user?search=${search}`, config)
-            const updatedSearchResult = data.filter(newResult => !selectedChat.users.some(existingResult => existingResult._id === newResult._id));
-            setSearchResult(updatedSearchResult);
-            setLoading(false);
-        } catch (error) {
-            toast.error("Unable to search", {
-                position: "bottom-left",
-                autoClose: 3000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            });
-            setLoading(false);
+        if (searchTimeout) {
+            clearTimeout(searchTimeout);
         }
+
+        setSearchTimeout(setTimeout(async () => {
+            try {
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                }
+
+                const { data } = await axios.get(`${apiUrl}/api/user?search=${search}`, config)
+                const updatedSearchResult = data.filter(newResult => !selectedChat.users.some(existingResult => existingResult._id === newResult._id));
+                setSearchResult(updatedSearchResult);
+                setLoading(false);
+            } catch (error) {
+                toast.error("Unable to search", {
+                    position: "bottom-left",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+                setLoading(false);
+            }
+        }, 1500))
     };
 
     const handleAddUser = async (userToAdd) => {
@@ -201,7 +208,7 @@ export default function UpdateGroupChatModal({ fetchAgain, setFetchAgain }) {
                     </Box>
 
                     {selectedChat.groupAdmin._id === user._id && (
-                        <TextField id="outlined-basic" label="Add users to group" onChange={(e) => { handleSearch(e.target.value) }} variant="outlined" sx={{ width: '100%', marginTop: 2 }} />
+                        <TextField id="outlined-basic" label="Add users to group" onChange={(e) => {handleSearch(e.target.value)}} variant="outlined" sx={{ width: '100%', marginTop: 2 }} />
                     )}
 
                     {loading ? (
