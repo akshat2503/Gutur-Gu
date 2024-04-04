@@ -83,7 +83,9 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                             setCurrentExpression(mostProminentExpression);
 
                             // Emit the expression to the other user
-                            socket.emit('expression', mostProminentExpression);
+                            // socket.emit('expression', mostProminentExpression);
+                            socket.emit('expression', mostProminentExpression, selectedChat._id);
+
 
                         });
                     }, 3000);
