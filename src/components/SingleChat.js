@@ -33,6 +33,7 @@ const ENDPOINT = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
 var socket, selectedChatCompare;
 
 export default function SingleChat({ fetchAgain, setFetchAgain }) {
+    const { user, selectedChat, setSelectedChat, notification, setNotification } = ChatState();
     const apiUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
 
     const [loading, setLoading] = useState(false);
@@ -103,8 +104,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         loop: true,
         animationData: animationData,
     }
-
-    const { user, selectedChat, setSelectedChat, notification, setNotification } = ChatState();
 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
