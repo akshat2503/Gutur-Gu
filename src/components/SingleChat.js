@@ -82,10 +82,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                             }
                             console.log('Most prominent expression:', mostProminentExpression);
                             setCurrentExpression(mostProminentExpression);
-
-                            // Emit the expression to the other user
-                            socket.emit('expression', mostProminentExpression);
-
                         });
                     }, 3000);
                 })
@@ -119,12 +115,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         socket.on('connected', () => setSocketConnected(true));
         socket.on('typing', () => setIsTyping(true));
         socket.on('stop typing', () => setIsTyping(false));
-
-        socket.on('expression', (expression) => {
-            // Handle the received expression here
-            console.log('Received expression:', expression);
-        });
-
     }, [])
 
     useEffect(() => {
@@ -283,12 +273,12 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                                     onClose={handleClose}
                                     aria-labelledby="modal-modal-title"
                                     aria-describedby="modal-modal-description"
-                                >
+                                    >
                                     <Box sx={style}>
                                         <Avatar
                                             src={getSenderFull(user, selectedChat.users).pic}
                                             sx={{ width: 70, height: 70, mb: '16px' }}
-                                        >{getSenderFull(user, selectedChat.users).name[0]}</Avatar>
+                                            >{getSenderFull(user, selectedChat.users).name[0]}</Avatar>
                                         <Typography id="modal-modal-title" variant="h6" component="h2">
                                             {getSenderFull(user, selectedChat.users).name}
                                         </Typography>
@@ -318,8 +308,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                     }} >
                         {loading ? (
                             <CircularProgress size={50} sx={{ alignSelf: 'center', justifySelf: 'center', m: 'auto' }} />
-                        ) : (
-                            <Box sx={{ display: 'flex', flexDirection: 'column', overflowY: 'scroll', scrollbarWidth: 'none' }}>
+                            ) : (
+                                <Box sx={{ display: 'flex', flexDirection: 'column', overflowY: 'scroll', scrollbarWidth: 'none' }}>
                                 <ScrollableChat messages={messages} />
                             </Box>
                         )}
@@ -337,7 +327,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                 </Box>
             )}
             <ToastContainer />
-
+            
             <video id='video' height='720' width='560' style={{ position: 'absolute', top: 0, left: 0, zIndex: -1, opacity: 0 }} autoPlay muted />
         </>
     )
