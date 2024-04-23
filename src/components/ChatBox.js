@@ -17,6 +17,7 @@ export default function ChatBox({ fetchAgain, setFetchAgain }) {
                 width: { xs: '100%', md: '60%' },
                 borderRadius: '16px',
                 borderWidth: '1px',
+                // fontFamily: 'Work sans',
             }}
             p={3}
         >

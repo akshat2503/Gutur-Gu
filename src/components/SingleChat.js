@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, CircularProgress, Modal, TextField, Typography } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from "react-toastify";
 import { ChatState } from '../context/ChatProvider';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -11,14 +11,13 @@ import ScrollableChat from './ScrollableChat';
 import io from 'socket.io-client';
 import Lottie from 'react-lottie';
 import animationData from '../animations/typing.json';
-import * as faceapi from 'face-api.js';
 
 const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: { xs: 300, md: 400 },
+    width: {xs: 300, md: 400},
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -43,56 +42,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
     const [isTyping, setIsTyping] = useState(false);
     const [typing, setTyping] = useState(false);
     const [typingTimeout, setTypingTimeout] = useState(null);
-
-    // const [expression, setExpression] = useState("");
-    const [currentExpression, setCurrentExpression] = useState("");
-
-    useEffect(() => {
-        const video = document.getElementById('video');
-        const startVideo = async () => {
-            try {
-                console.log(video);
-                navigator.getUserMedia(
-                    { video: {} },
-                    // stream => {
-                    //     if (video) video.srcObject = stream;
-                    // },
-                    stream => video.srcObject = stream,
-                    err => console.log(err)
-                )
-                await Promise.all([
-                    faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
-                    faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-                    faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
-                    faceapi.nets.faceExpressionNet.loadFromUri('/models')
-                ]);
-
-                console.log("Starting playing function")
-                video.addEventListener('play', () => {
-                    setInterval(async () => {
-                        const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
-                        detections.forEach(detection => {
-                            let mostProminentExpression = '';
-                            let highestConfidence = 0;
-                            for (const [expression, confidence] of Object.entries(detection.expressions)) {
-                                if (confidence > highestConfidence) {
-                                    highestConfidence = confidence;
-                                    mostProminentExpression = expression;
-                                }
-                            }
-                            console.log('Most prominent expression:', mostProminentExpression);
-                            setCurrentExpression(mostProminentExpression);
-                        });
-                    }, 3000);
-                })
-            } catch (error) {
-                console.error("Error loading models:", error);
-            }
-        };
-        startVideo();
-    }, [])
-
-    const expression = useMemo(() => currentExpression, [currentExpression]);
 
     const defaultOptions = {
         loop: true,
@@ -142,6 +91,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
             }
 
             const { data } = await axios.get(`${apiUrl}/api/message/${selectedChat._id}`, config);
+            console.log(data);
             setMessages(data);
             setLoading(false);
             socket.emit('join chat', selectedChat._id);
@@ -261,24 +211,19 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                         <ArrowBackIcon sx={{ display: { xs: 'flex', md: 'none' }, cursor: 'pointer' }} onClick={() => { setSelectedChat(""); setFetchAgain(!fetchAgain); }} />
                         {!selectedChat.isGroupChat ? (
                             <>
-                                <Box>
-
-                                    {getSender(user, selectedChat.users)}
-                                    <Typography>The user seems {expression}</Typography>
-                                    {/* <video id='video' height='720' width='560' style={{ position: 'absolute', top: 0, left: 0, zIndex: -1, opacity: 0 }} autoPlay muted /> */}
-                                </Box>
+                                {getSender(user, selectedChat.users)}
                                 <VisibilityIcon onClick={handleOpen} />
                                 <Modal
                                     open={open}
                                     onClose={handleClose}
                                     aria-labelledby="modal-modal-title"
                                     aria-describedby="modal-modal-description"
-                                    >
+                                >
                                     <Box sx={style}>
                                         <Avatar
                                             src={getSenderFull(user, selectedChat.users).pic}
                                             sx={{ width: 70, height: 70, mb: '16px' }}
-                                            >{getSenderFull(user, selectedChat.users).name[0]}</Avatar>
+                                        >{getSenderFull(user, selectedChat.users).name[0]}</Avatar>
                                         <Typography id="modal-modal-title" variant="h6" component="h2">
                                             {getSenderFull(user, selectedChat.users).name}
                                         </Typography>
@@ -308,8 +253,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                     }} >
                         {loading ? (
                             <CircularProgress size={50} sx={{ alignSelf: 'center', justifySelf: 'center', m: 'auto' }} />
-                            ) : (
-                                <Box sx={{ display: 'flex', flexDirection: 'column', overflowY: 'scroll', scrollbarWidth: 'none' }}>
+                        ) : (
+                            <Box sx={{ display: 'flex', flexDirection: 'column', overflowY: 'scroll', scrollbarWidth: 'none' }}>
                                 <ScrollableChat messages={messages} />
                             </Box>
                         )}
@@ -327,8 +272,6 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                 </Box>
             )}
             <ToastContainer />
-            
-            <video id='video' height='720' width='560' style={{ position: 'absolute', top: 0, left: 0, zIndex: -1, opacity: 0 }} autoPlay muted />
         </>
     )
 }
