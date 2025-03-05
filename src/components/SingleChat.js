@@ -73,6 +73,12 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                     setNotification([newMessageRecieved, ...notification]);
                     setFetchAgain(!fetchAgain);
                 }
+                if (Notification.permission === "granted") {
+                    new Notification(`New Message from ${newMessageRecieved.sender.name}`, {
+                        body: newMessageRecieved.content,
+                        icon: newMessageRecieved.sender.pic || "/default-avatar.png", // Change the default avatar if needed
+                    });
+                }
             } else {
                 setMessages([...messages, newMessageRecieved]);
             }

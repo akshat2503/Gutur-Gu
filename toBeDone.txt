@@ -13,6 +13,6 @@ Unread Status against the chat.
 Fix eye on group chat
 
 Not found issue on /chats.
-    Fixed using ChatGPT, Will see when pushed to render
+    Issue from render's end
 
 Group PFP, Editing PFP of user.
