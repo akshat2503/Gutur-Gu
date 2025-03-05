@@ -85,6 +85,13 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         })
     })
 
+    useEffect(() => {
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
+    }, []);
+    
+
     const fetchMessages = async () => {
         if (!selectedChat) return;
 
